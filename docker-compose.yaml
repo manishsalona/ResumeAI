@@ -1,0 +1,44 @@
+version: '3.8'
+
+services:
+  backend:
+    container_name: backend-container  # Specifying the container name
+    image : salona1993/resumeai:backend
+    ports:
+      - "4292:4292"
+    environment:
+     - JWT_SECRET_KEY="MYREALLYSECRETKEY"
+     - MONGO_URL=mongodb://mongodb:27017/resumeai
+     - OPENAI_KEY="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"
+     - GMAIL_USER="salonamanish@Gmail.com"
+     - GMAIL_PASS="mansih#1993"
+     - FRONT_END="http://localhost:80"
+
+    depends_on:
+      - mongodb
+    networks:
+      - app-network
+
+  frontend:
+    container_name: frontend-container  # Specifying the container name
+    image: salona1993/resumeai:frontend
+    ports:
+      - "80:80"
+    networks:
+      - app-network
+
+  mongodb:
+    container_name: mongodb-container  # Specifying the container name
+    image: mongo:latest
+    environment:
+      - MONGO_INITDB_ROOT_USERNAME=admin
+      - MONGO_INITDB_ROOT_PASSWORD=admin
+      - MONGO_INITDB_DATABASE=resumeai
+    ports:
+      - "27017:27017"
+    networks:
+      - app-network
+
+networks:
+  app-network:
+    driver: bridge
